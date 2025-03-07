@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planta Permanente - Rock Band</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- React -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* Estilos CSS adicionales */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            /* Más oscuro */
+            color: #e0e0e0;
+            /* Gris claro */
+            line-height: 1.6;
+        }
+
+        .band-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.75rem;
+            /* Más redondeado */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            /* Sombra más pronunciada */
+            transition: transform 0.3s ease-in-out;
+            /* Transición suave */
+        }
+
+        .band-image:hover {
+            transform: scale(1.05);
+            /* Ligeramente más grande al pasar el cursor */
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            /* Más grande */
+            font-weight: 700;
+            /* Más negrita */
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+            /* Blanco */
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            /* Sombra en el texto */
+        }
+
+        .song-item {
+            margin-bottom: 0.75rem;
+            padding: 1rem;
+            background-color: #1e1e1e;
+            /* Un poco más claro que el fondo */
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: background-color 0.3s ease-in-out;
+            /* Transición suave */
+        }
+
+        .song-item:hover {
+            background-color: #333;
+            /* Más oscuro al pasar el cursor */
+        }
+
+        .song-item a {
+            color: #90caf9;
+            /* Azul claro */
+            text-decoration: none;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .song-item a:hover {
+            color: #e3f2fd;
+            /* Más claro al pasar el cursor */
+            text-decoration: underline;
+        }
+
+        .footer {
+            background-color: #1e1e1e;
+            padding: 2.5rem 0;
+            text-align: center;
+            color: #bdbdbd;
+            /* Gris más suave */
+        }
+
+        .footer a {
+            color: #4dd0e1;
+            /* Turquesa */
+            text-decoration: none;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .footer a:hover {
+            color: #b2ebf2;
+            /* Más claro al pasar el cursor */
+            text-decoration: underline;
+        }
+
+        /* Estilos para la barra de navegación fija */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #1e1e1e;
+            /* Un poco más claro que el fondo */
+            z-index: 100;
+            /* Asegura que esté por encima de otros elementos */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            /* Sombra sutil */
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+            /* Blanco */
+            text-decoration: none;
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .navbar-links a {
+            color: #90caf9;
+            /* Azul claro */
+            text-decoration: none;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .navbar-links a:hover {
+            color: #e3f2fd;
+            /* Más claro al pasar el cursor */
+        }
+
+        /* Estilos para las tarjetas */
+        .card {
+            background-color: #1e1e1e;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-description {
+            color: #bdbdbd;
+        }
+
+        /* Estilos para el banner */
+        .banner {
+            background-image: url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 8rem 0;
+            text-align: center;
+            color: #fff;
+            position: relative;
+        }
+
+        .banner-secondary {
+            background-image: url('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 6rem 0;
+            text-align: center;
+            color: #fff;
+            position: relative;
+            margin-top: 2rem;
+        }
+
+        .banner::before,
+        .banner-secondary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .banner-content {
+            position: relative;
+            z-index: 2;
+            /* Asegura que el texto esté delante del overlay */
+        }
+
+        .banner-title {
+            font-size: 4rem;
+            /* Más grande */
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.7);
+            /* Sombra más fuerte */
+        }
+
+        .banner-subtitle {
+            font-size: 1.5rem;
+            color: #ddd;
+            /* Un gris más claro */
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+            /* Sombra más fuerte */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        function App() {
+            return (
+                <div>
+                    {/* Barra de navegación fija */}
+                    <nav className="navbar">
+                        <div className="container mx-auto navbar-container">
+                            <a href="#" className="navbar-brand">Planta Permanente</a>
+                            <div className="navbar-links">
+                                <a href="#">Noticias</a>
+                                <a href="#">Música</a>
+                                <a href="#">Videos</a>
+                                <a href="#">Contacto</a>
+                            </div>
+                        </div>
+                    </nav>
+
+                    {/* Encabezado con banner principal */}
+                    <header className="banner">
+                        <div className="banner-content">
+                            <h1 className="banner-title">Planta Permanente</h1>
+                            <p className="banner-subtitle">Rock desde el corazón</p>
+                        </div>
+                    </header>
+
+                    {/* Segundo banner */}
+                    <div className="banner-secondary">
+                        <div className="banner-content">
+                            <h2 className="banner-title">Próximo Show</h2>
+                            <p className="banner-subtitle">15 de Marzo - Teatro Gran Rex</p>
+                        </div>
+                    </div>
+
+                    <div className="container mx-auto px-4 py-8">
+
+
+                        {/* Imagen de la banda */}
+                        <img src="https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+                            alt="Planta Permanente Band" 
+                            className="band-image mx-auto mb-12" 
+                        />
+                        {/* Sección de Noticias */}
+                        <section className="mb-12">
+                            <h2 className="section-title">Noticias</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {/* Tarjeta de noticia 1 */}
+                                <div className="card">
+                                    <img src="https://images.unsplash.com/photo-1505740420928-5e560ba3e56b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                        alt="Noticia 1" className="card-image" />
+                                    <div className="card-content">
+                                        <h3 className="card-title">Nuevo single "Raíces" disponible</h3>
+                                        <p className="card-description">Ya puedes escuchar nuestro nuevo single en todas
+                                            las plataformas digitales.</p>
+                                    </div>
+                                </div>
+                                {/* Tarjeta de noticia 2 */}
+                                <div className="card">
+                                    <img src="https://images.unsplash.com/photo-1543791187-825578473491?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                        alt="Noticia 2" className="card-image" />
+                                    <div className="card-content">
+                                        <h3 className="card-title">Próximo concierto en [Lugar]</h3>
+                                        <p className="card-description">¡No te pierdas nuestro próximo concierto el
+                                            [Fecha] en [Lugar]!</p>
+                                    </div>
+                                </div>
+                                {/* Tarjeta de noticia 3 */}
+                                <div className="card">
+                                    <img src="https://images.unsplash.com/photo-1576766491415-504159998627?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                        alt="Noticia 3" className="card-image" />
+                                    <div className="card-content">
+                                        <h3 className="card-title">Entrevista exclusiva en [Radio/Revista]</h3>
+                                        <p className="card-description">¡Escucha nuestra entrevista en
+                                            [Radio/Revista]!</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Sección de Música */}
+                        <section className="mb-12">
+                            <h2 className="section-title">Música</h2>
+                            <ul className="list-none">
+                                <li className="song-item">
+                                    <a href="https://open.spotify.com/track/FAKE_ID_RAICES" target="_blank"
+                                        rel="noopener noreferrer">Raíces <i className="ph-spotify-logo"></i></a>
+                                </li>
+                                <li className="song-item">
+                                    <a href="https://open.spotify.com/track/FAKE_ID_CAMINOS" target="_blank"
+                                        rel="noopener noreferrer">Caminos <i className="ph-spotify-logo"></i></a>
+                                </li>
+                                <li className="song-item">
+                                    <a href="https://open.spotify.com/track/FAKE_ID_SUENOS_ROTOS" target="_blank"
+                                        rel="noopener noreferrer">Sueños Rotos <i className="ph-spotify-logo"></i></a>
+                                </li>
+                            </ul>
+                        </section>
+
+                        {/* Sección de Videos */}
+                        <section className="mb-12">
+                            <h2 className="section-title">Videos</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {/* Video 1 */}
+                                <div className="card">
+                                    <iframe width="100%" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                                        title="YouTube video" allowfullscreen className="card-image"></iframe>
+                                </div>
+                                {/* Video 2 */}
+                                <div className="card">
+                                    <iframe width="100%" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                                        title="YouTube video" allowfullscreen className="card-image"></iframe>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Sección de Contacto */}
+                        <section className="mb-12">
+                            <div className="banner-secondary" style={{
+                                backgroundImage: "url('https://images.unsplash.com/photo-1534536281715-e28d76689b4d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')",
+                                marginBottom: "2rem"
+                            }}>
+                                <div className="banner-content">
+                                    <h2 className="banner-title">Contacto</h2>
+                                    <p className="banner-subtitle">¡Conecta con nosotros!</p>
+                                </div>
+                            </div>
+                            <div className="container mx-auto px-4">
+                                <div className="bg-[#1e1e1e] p-8 rounded-lg shadow-lg">
+                                    <p className="text-xl mb-4">Email: contacto@plantapermanente.com</p>
+                                    <p className="text-xl">Teléfono: +54 9 11 1234-5678</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Pie de página */}
+                        <footer className="footer">
+                            <p>&copy; 2024 Planta Permanente. Todos los derechos reservados.</p>
+                            <p>
+                                Síguenos en:
+                                <a href="#" target="_blank" rel="noopener noreferrer">Facebook</a> |
+                                <a href="#" target="_blank" rel="noopener noreferrer">Instagram</a> |
+                                <a href="#" target="_blank" rel="noopener noreferrer">Twitter</a>
+                            </p>
+                        </footer>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>
